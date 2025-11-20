@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ANRM – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    /* ---- Design tokens ---- */
+    :root {
+      --bg-body: radial-gradient(circle at top, #e0ecff 0, #f9fafb 50%, #e5e7eb 100%);
+      --bg-surface: #ffffff;
+      --primary: #1d4ed8;
+      --primary-soft: #e0ebff;
+      --primary-dark: #1e3a8a;
+      --accent: #facc15;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border-subtle: rgba(148, 163, 184, 0.45);
+      --radius-lg: 1.25rem;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --shadow-header: 0 12px 30px rgba(15, 23, 42, 0.18);
+      --nav-height: 74px;
+    }
+
+    /* ---- Reset & base ---- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    body.page-loaded {
+      opacity: 1;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ---- Header ---- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 64, 175, 0.96));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+      transition:
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .site-header.header-scrolled {
+      box-shadow: var(--shadow-header);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 64, 175, 0.98));
+    }
+
+    .header-inner {
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 0.65rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+      height: var(--nav-height);
+    }
+
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .branding img {
+      height: 52px;
+      width: auto;
+      border-radius: 0.5rem;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
+    }
+
+    .site-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    /* ---- Navigation ---- */
+    .main-nav {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.6rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      padding: 0.45rem 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      position: relative;
+      color: #e5e7eb;
+      letter-spacing: 0.08em;
+      text-shadow: 0 1px 2px rgba(15, 23, 42, 0.45);
+    }
+
+    .nav-link::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.3rem;
+      width: 0%;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #bfdbfe, #facc15);
+      transition: width 0.22s ease;
+    }
+
+    .nav-link:hover::before,
+    .nav-item:focus-within > .nav-link::before {
+      width: 100%;
+    }
+
+    .nav-link::after {
+      content: "▾";
+      font-size: 0.6rem;
+      opacity: 0.75;
+      margin-left: 0.1rem;
+    }
+
+    .nav-item:not(.has-dropdown) .nav-link::after {
+      content: "";
+    }
+
+    /* ---- Dropdown menus ---- */
+    .dropdown-menu {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 0.65rem);
+      transform: translateX(-50%) scale(0.97);
+      min-width: 220px;
+      background-color: #ffffff;
+      color: #111827;
+      border-radius: 0.9rem;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      padding: 0.4rem 0.25rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0.22s ease;
+      z-index: 1000;
+    }
+
+    .nav-item.has-dropdown:hover .dropdown-menu,
+    .nav-item.has-dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.9rem;
+      text-transform: none;
+      white-space: nowrap;
+      border-radius: 0.55rem;
+      transition:
+        background-color 0.16s ease,
+        padding-left 0.16s ease;
+    }
+
+    .dropdown-menu li a:hover,
+    .dropdown-menu li a:focus {
+      background-color: #eff4ff;
+      padding-left: 1.05rem;
+    }
+
+    /* ---- Language switch button ---- */
+    .lang-switch {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(15, 23, 42, 0.35);
+      padding: 0.3rem 0.9rem;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .lang-switch img {
+      width: 20px;
+      height: auto;
+      border-radius: 3px;
+      box-shadow: 0 4px 8px rgba(15, 23, 42, 0.45);
+    }
+
+    .lang-switch:hover {
+      background: rgba(15, 23, 42, 0.7);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.4);
+    }
+
+    /* ---- Mobile nav ---- */
+    .nav-toggle {
+      display: none;
+      margin-left: auto;
+      border: none;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 0.4rem;
+      border-radius: 0.75rem;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #e5e7eb;
+      margin: 4px 0;
+      border-radius: 999px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .nav-toggle:hover {
+      background: rgba(15, 23, 42, 0.3);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 1300px) {
+      .header-inner {
+        flex-wrap: wrap;
+        height: auto;
+        row-gap: 0.6rem;
+      }
+
+      .main-nav {
+        position: static;
+        width: 100%;
+        order: 3;
+        transform: none;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .lang-switch {
+        order: 2;
+      }
+
+      .nav-list {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        padding-top: 0.45rem;
+        padding-bottom: 0.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+      }
+
+      .nav-list.open {
+        max-height: 500px;
+      }
+
+      .dropdown-menu {
+        position: static;
+        transform: none;
+        box-shadow: none;
+        border-radius: 0.7rem;
+        padding-inline: 0.1rem;
+        margin-top: 0.2rem;
+        border: none;
+        background: rgba(15, 23, 42, 0.06);
+      }
+
+      .dropdown-menu li a {
+        color: #0f172a;
+      }
+
+      .nav-item.has-dropdown:hover .dropdown-menu,
+      .nav-item.has-dropdown:focus-within .dropdown-menu {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: none;
+      }
+
+      .nav-item.has-dropdown.open > .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+    }
+
+    /* ---- Main content ---- */
+    .site-main {
+      flex: 1;
+      padding: 2.5rem 1.25rem 2.75rem;
+    }
+
+    .content-wrapper {
+      max-width: 1120px;
+      margin: 0 auto;
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(2rem, 3vw, 2.7rem) clamp(1.6rem, 4vw, 3rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 60%),
+                  radial-gradient(circle at bottom left, rgba(250, 204, 21, 0.08), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .content-wrapper h1 {
+      font-size: clamp(2rem, 2.5vw, 2.35rem);
+      text-align: center;
+      margin-bottom: 0.4rem;
+      color: #0f172a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .content-wrapper h1::after {
+      content: "";
+      display: block;
+      width: 82px;
+      height: 3px;
+      margin: 0.8rem auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .content-wrapper p {
+      font-size: 1rem;
+      color: #374151;
+    }
+
+    .intro-text {
+      max-width: 720px;
+      margin: 0.75rem auto 0;
+      text-align: center;
+      color: #4b5563;
+    }
+
+    .highlight-box {
+      border-left: 4px solid var(--primary);
+      padding: 0.9rem 1.1rem;
+      background: linear-gradient(90deg, #f3f4ff, #ffffff);
+      border-radius: 0.7rem;
+      font-size: 0.97rem;
+      color: #111827;
+      margin-top: 0.6rem;
+    }
+
+    /* ---- Image & subtitle ---- */
+    .image-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 1.4rem;
+    }
+
+    .main-image {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.25);
+    }
+
+    .image-subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 0.15rem;
+      font-style: italic;
+    }
+
+    /* ---- Quotes ---- */
+    .quote-heading {
+      text-align: center;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2rem;
+    }
+
+    .quote-card {
+      margin: 0.85rem auto 0;
+      background: linear-gradient(135deg, #f9fafb, #e0ebff);
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 1rem 1.5rem;
+      max-width: 780px;
+      text-align: center;
+      font-style: italic;
+      color: #111827;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-card::before {
+      content: "“";
+      position: absolute;
+      font-size: 3.5rem;
+      font-family: Georgia, "Times New Roman", serif;
+      color: rgba(129, 140, 248, 0.25);
+      top: -0.6rem;
+      left: 1.1rem;
+    }
+
+    .quote-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-author {
+      display: block;
+      margin-top: 0.6rem;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    /* ---- Video ---- */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 1.9rem;
+      border-radius: 1.1rem;
+      overflow: hidden;
+      background: #020617;
+      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.42);
+    }
+
+    .video-wrapper::before {
+      content: "";
+      display: block;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ---- Scroll reveal animation ---- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---- Footer ---- */
+    .site-footer {
+      background: #020617;
+      color: #e5e7eb;
+      padding: 1.7rem 1.25rem 1.9rem;
+      margin-top: 2.2rem;
+      border-top: 1px solid rgba(51, 65, 85, 0.8);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-branding {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-weight: 600;
+    }
+
+    .footer-branding img {
+      height: 42px;
+      width: auto;
+      filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.8));
+      border-radius: 0.4rem;
+    }
+
+    .footer-text {
+      flex: 1;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    .footer-facebook {
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.9rem;
+      transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .footer-facebook::before {
+      content: "";
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .footer-facebook:hover {
+      background: #111827;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.6);
+    }
+
+    @media (max-width: 900px) {
+      .content-wrapper {
+        padding: 1.8rem 1.4rem 2rem;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-text {
+        order: 3;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- ===== Header ===== -->
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <div class="branding">
+        <img src="logo.png" alt="ANRM logo" />
+        <span class="site-title">ANRM</span>
+      </div>
+
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <!-- HOME -->
+          <li class="nav-item">
+            <a class="nav-link" href="#top">Acasă</a>
+          </li>
+
+          <!-- About ANRM -->
+          <li class="nav-item has-dropdown">
+            <a class="nav-link" href="#">Despre ANRM</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Scurt istoric ANRM</a></li>
+              <li><a href="#">Statut</a></li>
+              <li><a href="#">Comunicate de presă</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Donații</a></li>
+            </ul>
+          </li>
+
+          <!-- The Royal Family -->
+          <li class="nav-item has-dropdown">
+            <a class="nav-link" href="#">Familia Regală</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">MS Margareta a României</a></li>
+              <li><a href="#">Familia Regală</a></li>
+              <li><a href="#">Regii României</a></li>
+              <li><a href="#">Activitatea Familiei Regale</a></li>
+            </ul>
+          </li>
+
+          <!-- Short Guide -->
+          <li class="nav-item has-dropdown">
+            <a class="nav-link" href="#">Un scurt ghid</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">De ce Monarhia Constituțională</a></li>
+              <li><a href="#">Evenimente</a></li>
+            </ul>
+          </li>
+
+          <!-- Info -->
+          <li class="nav-item has-dropdown">
+            <a class="nav-link" href="#">Informații</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Simboluri Regale</a></li>
+              <li><a href="#">Clădiri domenii regale</a></li>
+              <li><a href="#">Personalități</a></li>
+              <li><a href="#">Cărți și web</a></li>
+              <li><a href="#">Video si Filme</a></li>
+            </ul>
+          </li>
+
+          <!-- Monarchies around the world -->
+          <li class="nav-item">
+            <a class="nav-link" href="#">Monarhia pe glob</a>
+          </li>
+        </ul>
+      </nav>
+
+      <a href="indexen.html" class="lang-switch">
+        <img src="uk.png" alt="English" />
+        <span>EN</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== Main Content ===== -->
+  <main class="site-main">
+    <section class="content-wrapper reveal">
+      <div class="content-inner">
+        <h1>Alianța Națională pentru Restaurarea Monarhiei</h1>
+
+        <div class="intro-text">
+          <p>
+            Ca monarhiști, suntem susținători ai Monarhiei Constituționale în ansamblul ei și ai legăturii strânse
+            pe care aceasta o are cu identitatea națională, valorile promovate, principiile și tradițiile respectate.
+          </p>
+          <div class="highlight-box">
+            Monarhia constituțională a fost, timp de generații, un factor de stabilitate, continuitate și demnitate
+            pentru România.
+          </div>
+        </div>
+
+        <div class="image-block">
+          <img src="image.png" alt="ANRM main image" class="main-image">
+          <p class="image-subtitle">
+            Majestatea Sa Margareta, Custodele Coroanei Române
+          </p>
+        </div>
+
+        <p class="quote-heading">
+          <strong>Citat</strong>
+        </p>
+
+        <div class="quote-card">
+          <p class="quote-text">
+            „Dacă vom reuși să ne ridicăm la înălțimea morală a strămoșilor noștri, noi vom birui prezentul și vom ști
+            să ne scriem viitorul.”
+          </p>
+          <span class="quote-author">Majestatea Sa Margareta</span>
+        </div>
+
+        <div class="quote-card">
+          <p class="quote-text">
+            „Coroana este o reflectare a Statului, în continuitatea lui istorică, şi a Naţiunii, în devenirea ei.”
+          </p>
+          <span class="quote-author">MS Regele Mihai I al României</span>
+        </div>
+
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/eQRr6OZR1ek"
+            title="YouTube video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer reveal">
+    <div class="footer-inner">
+      <div class="footer-branding">
+        <img src="logo.png" alt="ANRM logo small" />
+        <span>ANRM</span>
+      </div>
+
+      <p class="footer-text">
+        © 2025 ANRM – Alianța Națională pentru Restaurarea Monarhiei.
+      </p>
+
+      <a
+        class="footer-facebook"
+        href="https://www.facebook.com/anrmro"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Facebook
+      </a>
+    </div>
+  </footer>
+
+  <!-- ===== JavaScript (animations & polish) ===== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Fade in whole page
+      document.body.classList.add("page-loaded");
+
+      // Header shadow / style when scrolling
+      const header = document.querySelector(".site-header");
+      function onScroll() {
+        if (window.scrollY > 20) {
+          header.classList.add("header-scrolled");
+        } else {
+          header.classList.remove("header-scrolled");
+        }
+      }
+      window.addEventListener("scroll", onScroll);
+      onScroll();
+
+      // Scroll reveal for elements with .reveal
+      const revealElements = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      revealElements.forEach(el => observer.observe(el));
+
+      // Mobile navigation toggle
+      const navToggle = document.querySelector(".nav-toggle");
+      const navList = document.querySelector(".nav-list");
+
+      navToggle.addEventListener("click", () => {
+        const isOpen = navList.classList.toggle("open");
+        navToggle.classList.toggle("active", isOpen);
+        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+
+      // Mobile dropdown open/close on click
+      const dropdownItems = document.querySelectorAll(".nav-item.has-dropdown");
+
+      dropdownItems.forEach(item => {
+        const link = item.querySelector(".nav-link");
+        link.addEventListener("click", (e) => {
+          if (window.innerWidth <= 900) {
+            e.preventDefault();
+            item.classList.toggle("open");
+          }
+        });
+      });
+
+      // Close mobile nav when clicking a link (optional)
+      navList.addEventListener("click", (e) => {
+        if (e.target.tagName.toLowerCase() === "a" && window.innerWidth <= 900) {
+          navList.classList.remove("open");
+          navToggle.classList.remove("active");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
