@@ -448,6 +448,25 @@
   color: #555;
   margin-top: 0.5rem;
 }
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 0.8rem; /* rounded corners */
+  margin-top: 1.5rem;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0.8rem;
+}
 
   </style>
 </head>
@@ -542,15 +561,22 @@
           Ca monarhiști suntem susținători ai Monarhiei Constituționale în ansamblul ei, al legăturii strânse pe care aceasta o are în legătură cu identitatea națională, valorile promovate, pricipiile și tradițiile respectate.
         </p>
 
-        <div class="highlight-box">
-          <strong>Tip for development:</strong> Keep each section of your homepage
-          focused on one idea. You can duplicate this box for news, events, or calls to action.
-        </div>
+        <p><i>”Dacă vom reuși să ne ridicăm la înălțimea morală a strămoșilor noștri, noi vom birui prezentul și vom ști să ne scriem viitorul.”</i> - <strong>Majestatea Sa Margareta.</strong></p>
 
         <p>
-          Everything inside this box is laid out in a vertical column. You can add
-          images, additional headings, or even embed videos.
+          <strong>Citat</strong>
         </p>
+        <p><i>„Coroana este o reflectare a Statului, în continuitatea lui istorică, şi a Naţiunii, în devenirea ei.”</i>
+- <strong>MS Regele Mihai I al României</strong></p>
+<div class="video-wrapper">
+  <iframe
+    src="https://www.youtube.com/embed/eQRr6OZR1ek"
+    title="YouTube video"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
+
       </div>
     </section>
   </main>
