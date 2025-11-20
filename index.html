@@ -66,7 +66,8 @@
       padding: 0.75rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      justify-content: space-between; /* pushes branding left, nav right */
+      position: relative;
     }
 
     .branding {
@@ -74,10 +75,11 @@
       align-items: center;
       gap: 0.75rem;
       white-space: nowrap;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55));
     }
 
     .branding img {
-      height: 40px;
+      height: 60px;
       width: auto;
     }
 
@@ -89,7 +91,9 @@
 
     /* ---- Navigation ---- */
     .main-nav {
-      flex: 1;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .nav-list {
