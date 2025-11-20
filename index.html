@@ -396,6 +396,36 @@
         order: 3;
       }
     }
+    /* Language switch button */
+.lang-switch {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.lang-switch img {
+  width: 22px;
+  height: auto;
+  border-radius: 3px;
+}
+
+.lang-switch:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .lang-switch {
+    order: 2;
+  }
+}
+
   </style>
 </head>
 
@@ -468,6 +498,11 @@
           </li>
         </ul>
       </nav>
+      <a href="indexen.html" class="lang-switch">
+  <img src="uk.png" alt="English" />
+  <span>EN</span>
+</a>
+
     </div>
   </header>
 
