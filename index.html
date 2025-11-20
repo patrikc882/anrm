@@ -66,13 +66,16 @@
   padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: center; /* centers the nav */
-  position: relative;      /* allows absolute elements */
+  justify-content: center; /* keeps menu centered */
+  position: relative;
 }
 
-    .branding {
+/* Put logo + ANRM text at the absolute left edge */
+.branding {
   position: absolute;
-  left: 1.5rem;            /* pin logo + ANRM text to the left */
+  left: 1.5rem;  /* exactly aligns to the left padding */
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 0.75rem;
