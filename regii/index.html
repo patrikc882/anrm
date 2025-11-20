@@ -473,6 +473,18 @@
   align-items: center;      /* centers image + text */
   gap: 0.15rem;             /* small space between image and subtitle */
 }
+.image-row {
+  display: flex;
+  justify-content: center;   /* center both images horizontally */
+  gap: 1.2rem;                /* space between the images */
+  margin: 1rem 0;             /* spacing above/below the row */
+}
+
+.image-row img {
+  width: 48%;                 /* makes them fit side-by-side */
+  max-width: 100%;
+  border-radius: 0.6rem;      /* same rounded corners as your main*
+
 
   </style>
 </head>
@@ -559,16 +571,25 @@
   <main class="site-main">
     <section class="content-wrapper reveal">
       <div class="content-inner">
-        <h1>Intro</h1>
-        <p>Alianța Națională pentru Restaurarea Monarhiei (ANRM) susține revenirea la monarhia constituțională</p>
-        <h1>Despre ANRM</h1>
-        <p>Alianța Națională pentru Restaurarea Monarhiei reprezintă principala asociație a monarhiștilor care doresc restaurarea formei de guvernământ Monarhie Constituțională în România, urmând linia de succesiune care a fost decisă de Majestatea Sa Regele Mihai I.
-Alianța Națională pentru Restaurarea Monarhiei (ANRM) a luat naștere în anul 2012 la inițiativa de a uni toate forțele monarhiste din societatea românească. Cu o sută de membri fondatori, în anul 2013 a fost înscrisă în Registrul Național al Fundațiilor și Asociațiilor.
-ANRM a desfășurat permanent o campanie de informare a românilor despre rolul istoric al Casei Regale a României, precum și în vederea înțelegerii necesității repunerii Coroanei Române în fruntea Națiunii, de către reprezentanții societății și factorii decidenți.
-Alianța Națională pentru Restaurarea Monarhiei cheamă alături toți românii patrioți care își doresc o țară prosperă, respectată în Europa.
-Trăiască Regina!</p>
-<h1>Deveniți membru ANRM</h1>
-<p>Dacă doriți să deveniți membru ANRM, vă invităm să ne lăsați datele dumneavoastră de contact pe pagina Facebook pentru a intra în legătură cu cea mai apropiată filială ANRM.</p>
+        <h1>Regii României</h1>
+        <div class="image-row">
+  <img src="carolI.jpg" alt="Image 1">
+  <img src="reginaelisabeta.jpg" alt="Image 2">
+</div>
+<div class="image-row">
+  <img src="ferdinandI.jpg" alt="Image 1">
+  <img src="reginamaria.jpg" alt="Image 2">
+</div>
+
+<div class="image-row">
+  <img src="carolI.jpg" alt="Image 1">
+  <img src="reginaelena.jpg" alt="Image 2">
+</div>
+
+<div class="image-row">
+  <img src="mihaiI.jpg" alt="Image 1">
+  <img src="reginaana.jpg" alt="Image 2">
+</div>
 
       </div>
     </section>
