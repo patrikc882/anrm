@@ -492,6 +492,18 @@ p .dash-line {
   text-indent: 1.2rem; /* adjust as needed */
   display: block;
 }
+.dash-line {
+  display: block;
+  padding-left: 1.2rem;   /* Keeps indentation even on wrapped lines */
+  position: relative;
+}
+
+/* Optional: replace "-" with a cleaner, perfectly aligned bullet */
+.dash-line::before {
+  content: "-";
+  position: absolute;
+  left: 0;                /* places the dash in the margin area */
+}
 
 
   </style>
