@@ -389,45 +389,47 @@
       opacity: 0.85;
     }
 
-    @media (max-width: 900px) {
-        /* Prevent page scrolling when menu open */
+    @media (max-width: 1300px) {
+      @media (max-width: 1300px) {
+  /* Lock page scroll when menu is open */
   body.mobile-nav-open {
     overflow: hidden;
   }
 
   .header-inner {
-    position: relative;
-    z-index: 1001; /* above the overlay panel */
-    flex-wrap: nowrap;
+    padding: 0.75rem 1rem;
   }
 
-  /* Full-screen overlay panel */
+  /* Burger button visible on mobile */
+  .nav-toggle {
+    display: block;
+    margin-left: 0;        /* let lang-switch sit at far right */
+    margin-right: 0.75rem;
+    z-index: 1001;
+  }
+
+  /* Full-screen overlay nav */
   .main-nav {
     position: fixed;
-    inset: 0; /* top/right/bottom/left: 0 */
+    inset: 0;                          /* top/right/bottom/left: 0 */
     background-color: #4f69da;
-    padding: 5rem 1.5rem 2rem;  /* space for logo + close icon */
+    padding: 4.5rem 1.5rem 2rem;       /* space for header row */
     display: none;
-    z-index: 1000;
+    z-index: 900;                      /* under the sticky header */
   }
 
   .main-nav.open {
     display: block;
   }
 
-  .nav-toggle {
-    display: block;
-  }
-
   .nav-list {
-    display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
-    font-size: 1.05rem;
-    padding: 0;
-    max-height: none;        /* no clipping */
-    overflow-y: auto;        /* scroll if needed on very small screens */
+    gap: 1rem;
+    font-size: 1rem;
+    padding-top: 0;
+    max-height: none;                  /* no clipping */
+    overflow-y: auto;                  /* scroll if very tall */
   }
 
   .nav-item {
@@ -438,33 +440,36 @@
     padding: 0.25rem 0;
   }
 
-  /* Mobile dropdowns */
+  /* Mobile dropdowns: stacked, shown via JS (no hover) */
   .dropdown-menu {
     position: static;
     transform: none;
+    min-width: 0;
     box-shadow: none;
     border-radius: 0.4rem;
     margin-top: 0.35rem;
-    padding-left: 0.75rem;
-    background: rgba(255, 255, 255, 0.08);
+    padding: 0.25rem 0 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.12);
     display: none;
     flex-direction: column;
     gap: 0.35rem;
-    padding-bottom: 0.5rem;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
+
   .nav-item.has-dropdown.open > .dropdown-menu {
     display: flex;
   }
 
-  /* Disable hover-open on touch sizes; use click instead */
+  /* Disable hover-open behaviour on mobile; JS will handle it */
   .nav-item.has-dropdown:hover .dropdown-menu,
   .nav-item.has-dropdown:focus-within .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    /* Language switch button */
-     }
+    /* intentionally empty to override desktop rule */
+  }
 }
+
+    /* Language switch button */
 .lang-switch {
   margin-left: auto;
   display: flex;
@@ -704,10 +709,10 @@
       );
       revealElements.forEach(el => observer.observe(el));
 
-      // Mobile navigation toggle
-const navToggle   = document.querySelector(".nav-toggle");
-const mainNav     = document.querySelector(".main-nav");
-const navList     = document.querySelector(".nav-list");
+      // Mobile navigation toggle (overlay)
+const navToggle = document.querySelector(".nav-toggle");
+const mainNav  = document.querySelector(".main-nav");
+const navList  = document.querySelector(".nav-list");
 const dropdownItems = document.querySelectorAll(".nav-item.has-dropdown");
 
 navToggle.addEventListener("click", () => {
@@ -720,36 +725,35 @@ navToggle.addEventListener("click", () => {
   document.body.classList.toggle("mobile-nav-open", isOpen);
 });
 
-     // Mobile dropdown open/close on click
+// Mobile dropdown open/close on click (parent items only)
 dropdownItems.forEach(item => {
   const link = item.querySelector(".nav-link");
+
   link.addEventListener("click", (e) => {
     if (window.innerWidth <= 1300) {
-      // top-level dropdown toggle – don't navigate, just open/close
-      if (!link.closest(".dropdown-menu")) {
-        e.preventDefault();
-        item.classList.toggle("open");
-      }
+      // Don't navigate on mobile, just toggle submenu
+      e.preventDefault();
+      item.classList.toggle("open");
     }
   });
 });
 
-      // Close mobile nav when clicking a "real" link
+// Close mobile nav when clicking a "real" link
 navList.addEventListener("click", (e) => {
   if (e.target.tagName.toLowerCase() === "a" && window.innerWidth <= 1300) {
     const anchor = e.target;
     const parentItem = anchor.closest(".nav-item");
 
-    // If it's the TOP-LEVEL trigger for a dropdown, don't close:
+    // If this is a top-level dropdown trigger, keep menu open
     if (
       parentItem &&
       parentItem.classList.contains("has-dropdown") &&
-      !anchor.closest(".dropdown-menu")
+      anchor.classList.contains("nav-link")
     ) {
       return;
     }
 
-    // Otherwise, close the overlay
+    // Otherwise (submenu link or simple item), close overlay
     mainNav.classList.remove("open");
     navList.classList.remove("open");
     navToggle.classList.remove("active");
@@ -757,6 +761,8 @@ navList.addEventListener("click", (e) => {
     document.body.classList.remove("mobile-nav-open");
   }
 });
+
+    });
   </script>
 </body>
 </html>
