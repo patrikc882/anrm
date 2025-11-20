@@ -446,7 +446,7 @@
   text-align: center;
   font-size: 0.9rem;
   color: #555;
-  margin-top: 0.2rem;
+  margin-top: 0.05rem;
 }
 .video-wrapper {
   position: relative;
@@ -466,6 +466,12 @@
   height: 100%;
   border: 0;
   border-radius: 0.8rem;
+}
+.image-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* centers image + text */
+  gap: 0.15rem;             /* small space between image and subtitle */
 }
 
   </style>
@@ -553,10 +559,11 @@
     <section class="content-wrapper reveal">
       <div class="content-inner">
         <h1>Welcome to ANRM</h1>
+        <div class="image-block">
         <img src="image.png" alt="ANRM main image" class="main-image">
 
 <p class="image-subtitle"><i>Majestatea Sa Margareta , Custodele Coroanei Române</i></p>
-
+</div>
         <p>
           Ca monarhiști suntem susținători ai Monarhiei Constituționale în ansamblul ei, al legăturii strânse pe care aceasta o are în legătură cu identitatea națională, valorile promovate, pricipiile și tradițiile respectate.
         </p>
