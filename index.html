@@ -61,25 +61,20 @@
     }
 
     .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* keeps menu centered */
-  position: relative;
-}
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
 
-/* Put logo + ANRM text at the absolute left edge */
-.branding {
-  position: absolute;
-  left: 1.5rem;  /* exactly aligns to the left padding */
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      white-space: nowrap;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55));
+    }
 
     .branding img {
       height: 60px;
@@ -191,8 +186,6 @@
 
     /* ---- Mobile nav ---- */
     .nav-toggle {
-      position: absolute;
-      right: 1.5rem;
       display: none;
       margin-left: auto;
       border: none;
